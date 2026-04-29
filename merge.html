@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sridevi Kolakani - AR Caller Interview Hub</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+padding:20px;
+}
+
+.container{
+max-width:1150px;
+margin:auto;
+}
+
+header{
+text-align:center;
+padding:25px;
+margin-bottom:20px;
+}
+
+header h1{
+font-size:42px;
+color:#38bdf8;
+}
+
+header p{
+color:#cbd5e1;
+margin-top:10px;
+font-size:18px;
+}
+
+.card{
+background:#111827;
+padding:25px;
+border-radius:18px;
+margin-bottom:22px;
+box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+h2{
+color:#22c55e;
+margin-bottom:15px;
+}
+
+button{
+padding:12px 18px;
+border:none;
+border-radius:10px;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+margin:6px;
+}
+
+.blue{background:#38bdf8;color:#000;}
+.green{background:#22c55e;color:#fff;}
+.red{background:#ef4444;color:#fff;}
+.yellow{background:#facc15;color:#000;}
+
+input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+margin-top:10px;
+outline:none;
+}
+
+.chat{
+background:#1e293b;
+padding:15px;
+border-radius:12px;
+height:280px;
+overflow:auto;
+line-height:1.8;
+}
+
+video{
+width:100%;
+max-height:300px;
+border-radius:12px;
+background:black;
+margin-top:10px;
+}
+
+.result{
+font-size:18px;
+line-height:2;
+margin-top:10px;
+}
+
+.profile{
+line-height:2;
+font-size:17px;
+}
+
+footer{
+text-align:center;
+padding:15px;
+color:#94a3b8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<h1>Sridevi Kolakani</h1>
+<p>AR Caller Interview Practice Website</p>
+</header>
+
+<div class="card">
+<h2>Profile</h2>
+<div class="profile">
+Name: Sridevi Kolakani<br>
+Education: BA<br>
+Contact: 9391263876<br>
+Email: kedarkedar090@gmail.com<br>
+Experience: Fraud Analyst at Wipro<br>
+Job Looking For: AR Caller
+</div>
+</div>
+
+<div class="card">
+<h2>AR Caller AI Interview Chatbot</h2>
+
+<div class="chat" id="chatBox">
+Welcome Sridevi. Click Start Interview.
+</div>
+
+<button class="blue" onclick="startInterview()">Start Interview</button>
+<button class="green" onclick="startMic()">Mic</button>
+<button class="red" onclick="stopMic()">Stop Mic</button>
+<button class="yellow" onclick="speakAnswer()">Speak</button>
+
+<input type="text" id="answerBox" placeholder="Type your answer here...">
+
+<button class="green" onclick="submitAnswer()">Submit Answer</button>
+
+</div>
+
+<div class="card">
+<h2>Camera Practice</h2>
+<video id="video" autoplay muted playsinline></video>
+
+<button class="green" onclick="startCam()">Start Camera</button>
+<button class="red" onclick="stopCam()">Stop Camera</button>
+
+</div>
+
+<div class="card">
+<h2>High Package AR Caller Skills</h2>
+<div class="result">
+• Medical Billing Knowledge<br>
+• Insurance Follow-up<br>
+• Denial Management<br>
+• Communication Skills<br>
+• US Healthcare Terms<br>
+• Collections Process<br>
+• Aging Reports<br>
+• Excel Skills
+</div>
+</div>
+
+<footer>
+Developed for AR Caller Career Growth
+</footer>
+
+</div>
+
+<script>
+
+let questions = [
+"Tell me about yourself.",
+"What is AR Caller process?",
+"How do you handle denied claims?",
+"What is aging report?",
+"How will you talk with insurance company?",
+"Why should we hire you?"
+];
+
+let answers = {
+0:"My name is Sridevi Kolakani. I completed BA and worked as Fraud Analyst at Wipro. I am looking for AR Caller opportunity.",
+1:"AR Caller follows up unpaid medical claims with insurance companies.",
+2:"I review denial reason, correct claim, and resubmit for payment.",
+3:"Aging report shows pending claims by days.",
+4:"I speak professionally, verify claim details, and request payment status.",
+5:"I have communication skills, process knowledge, and dedication to grow."
+};
+
+let current = 0;
+let lastText = "";
+
+function startInterview(){
+
+current = 0;
+
+document.getElementById("chatBox").innerHTML =
+"<b>Interviewer:</b> " + questions[current];
+
+lastText = questions[current];
+
+}
+
+function submitAnswer(){
+
+let user = document.getElementById("answerBox").value.trim();
+
+if(user=="") return;
+
+document.getElementById("chatBox").innerHTML +=
+"<br><b>You:</b> "+user;
+
+document.getElementById("chatBox").innerHTML +=
+"<br><b>Suggested Best Answer:</b> "+answers[current]+"<br>";
+
+current++;
+
+if(current < questions.length){
+
+document.getElementById("chatBox").innerHTML +=
+"<br><b>Interviewer:</b> "+questions[current];
+
+lastText = questions[current];
+
+}else{
+
+document.getElementById("chatBox").innerHTML +=
+"<br><br><b>Interview Completed.</b>";
+
+lastText = "Interview Completed";
+
+}
+
+document.getElementById("answerBox").value="";
+
+}
+
+function speakAnswer(){
+
+let speech = new SpeechSynthesisUtterance(lastText);
+speech.lang="en-US";
+speech.rate=1;
+speechSynthesis.speak(speech);
+
+}
+
+/* MIC */
+
+let recognition;
+
+function startMic(){
+
+window.SpeechRecognition =
+window.SpeechRecognition || window.webkitSpeechRecognition;
+
+recognition = new SpeechRecognition();
+recognition.lang = "en-US";
+
+recognition.onresult = function(e){
+
+document.getElementById("answerBox").value =
+e.results[0][0].transcript;
+
+};
+
+recognition.start();
+
+}
+
+function stopMic(){
+if(recognition) recognition.stop();
+}
+
+/* CAMERA */
+
+let stream;
+
+function startCam(){
+
+navigator.mediaDevices.getUserMedia({video:true})
+.then(function(s){
+stream = s;
+document.getElementById("video").srcObject = s;
+});
+
+}
+
+function stopCam(){
+
+if(stream){
+stream.getTracks().forEach(track=>track.stop());
+document.getElementById("video").srcObject = null;
+}
+
+}
+
+</script>
+
+</body>
+</html>
