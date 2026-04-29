@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeWalk AI</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+padding:25px;
+}
+
+.container{
+max-width:1050px;
+margin:auto;
+}
+
+header{
+text-align:center;
+padding:20px;
+margin-bottom:25px;
+}
+
+header h1{
+font-size:42px;
+color:#38bdf8;
+}
+
+header p{
+color:#cbd5e1;
+margin-top:10px;
+}
+
+.card{
+background:#111827;
+padding:25px;
+border-radius:18px;
+margin-bottom:22px;
+box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+h2{
+color:#22c55e;
+margin-bottom:15px;
+}
+
+button{
+padding:12px 18px;
+border:none;
+border-radius:10px;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+margin:6px;
+}
+
+.blue{background:#38bdf8;color:#000;}
+.red{background:#ef4444;color:#fff;}
+.green{background:#22c55e;color:#fff;}
+.yellow{background:#facc15;color:#000;}
+
+.status{
+font-size:18px;
+line-height:2;
+margin-top:10px;
+}
+
+.big{
+font-size:22px;
+font-weight:bold;
+}
+
+.safe{color:#22c55e;}
+.warn{color:#facc15;}
+.danger{color:#ef4444;}
+
+input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+margin-top:10px;
+font-size:16px;
+}
+
+.map{
+background:#1e293b;
+padding:18px;
+border-radius:12px;
+margin-top:12px;
+color:#cbd5e1;
+}
+
+footer{
+text-align:center;
+padding:15px;
+color:#94a3b8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<h1>SafeWalk AI</h1>
+<p>Smart Personal Safety Alert System</p>
+</header>
+
+<div class="card">
+<h2>Safety Mode</h2>
+<button class="green" onclick="startWalk()">Start Walk</button>
+<button class="red" onclick="stopWalk()">Stop Walk</button>
+<button class="yellow" onclick="panicSOS()">PANIC SOS</button>
+
+<div class="status" id="walkStatus">
+Status: Not Active
+</div>
+</div>
+
+<div class="card">
+<h2>Trusted Contact</h2>
+<input type="text" id="contact" placeholder="Enter trusted contact number">
+<button class="blue" onclick="saveContact()">Save Contact</button>
+
+<div class="status" id="contactStatus">
+No contact saved.
+</div>
+</div>
+
+<div class="card">
+<h2>Live Location</h2>
+<button class="blue" onclick="getLocation()">Get Location</button>
+
+<div class="map" id="locationBox">
+Waiting for location...
+</div>
+</div>
+
+<div class="card">
+<h2>AI Risk Monitor</h2>
+<button class="blue" onclick="simulateSafe()">Normal Walk</button>
+<button class="yellow" onclick="simulateWarning()">Following Risk</button>
+<button class="red" onclick="simulateDanger()">Emergency</button>
+
+<div class="status" id="riskBox">
+Risk Score: 0/10
+</div>
+</div>
+
+<div class="card">
+<h2>Emergency Actions</h2>
+<div class="status">
+• Sends alert to trusted contact<br>
+• Shares live location<br>
+• Starts siren mode<br>
+• Saves incident time log
+</div>
+</div>
+
+<footer>
+SafeWalk AI Demo Project
+</footer>
+
+</div>
+
+<script>
+
+let walkActive = false;
+
+function startWalk(){
+walkActive = true;
+document.getElementById("walkStatus").innerHTML =
+"<span class='big safe'>Status: Safety Mode Active</span>";
+}
+
+function stopWalk(){
+walkActive = false;
+document.getElementById("walkStatus").innerHTML =
+"<span class='big'>Status: Not Active</span>";
+}
+
+function saveContact(){
+let c = document.getElementById("contact").value.trim();
+
+if(c==""){
+document.getElementById("contactStatus").innerHTML="Please enter contact.";
+return;
+}
+
+localStorage.setItem("safeContact",c);
+
+document.getElementById("contactStatus").innerHTML =
+"Trusted Contact Saved: "+c;
+}
+
+function getLocation(){
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(function(pos){
+
+document.getElementById("locationBox").innerHTML =
+"Latitude: "+pos.coords.latitude+"<br>" +
+"Longitude: "+pos.coords.longitude+"<br>" +
+"Location captured successfully.";
+
+});
+
+}else{
+document.getElementById("locationBox").innerHTML =
+"Location not supported.";
+}
+
+}
+
+function simulateSafe(){
+document.getElementById("riskBox").innerHTML =
+"<span class='safe big'>Risk Score: 1/10 - Safe</span>";
+}
+
+function simulateWarning(){
+document.getElementById("riskBox").innerHTML =
+"<span class='warn big'>Risk Score: 6/10 - Suspicious Activity</span><br>" +
+"AI Suggestion: Stay alert. Contact ready.";
+}
+
+function simulateDanger(){
+document.getElementById("riskBox").innerHTML =
+"<span class='danger big'>Risk Score: 9/10 - Emergency</span><br>" +
+"Alert sent to trusted contact.";
+sendAlert();
+}
+
+function panicSOS(){
+
+document.getElementById("riskBox").innerHTML =
+"<span class='danger big'>PANIC SOS Triggered</span><br>" +
+"Emergency support activated.";
+
+sendAlert();
+
+}
+
+function sendAlert(){
+
+let saved = localStorage.getItem("safeContact");
+
+if(saved){
+alert("Emergency Alert Sent To: " + saved);
+}else{
+alert("No trusted contact saved.");
+}
+
+}
+
+</script>
+
+</body>
+</html>
